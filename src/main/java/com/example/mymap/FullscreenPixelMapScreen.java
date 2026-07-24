@@ -10,12 +10,12 @@ public class FullscreenPixelMapScreen extends Screen {
         super(Text.literal("Карта следов"));
     }
 
-    @id86240433 (@Override)
+    @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        this.renderBackground(context); 
-        
+        this.renderBackground(context);
+
         MinecraftClient mc = MinecraftClient.getInstance();
-        if (mc == null || mc.player == null) return;
+        if (mc == null || mc.player == null || mc.world == null) return;
 
         int centerX = this.width / 2;
         int centerY = this.height / 2;
@@ -23,8 +23,12 @@ public class FullscreenPixelMapScreen extends Screen {
         int playerX = mc.player.getBlockX();
         int playerZ = mc.player.getBlockZ();
 
-        int pixelSize = 6; 
-        int range = 30;    
+        int pixelSize = 4;
+        int range = 40;
+
+        // Рисуем заголовок
+        context.drawText(mc.textRenderer, Text.literal("Карта следов"), 
+                        centerX - 50, 10, 0xFFFFFFFF, false);
 
         for (int dx = -range; dx <= range; dx++) {
             for (int dz = -range; dz <= range; dz++) {
@@ -42,11 +46,13 @@ public class FullscreenPixelMapScreen extends Screen {
             }
         }
 
+        // Белая точка игрока в центре
         context.fill(centerX, centerY, centerX + pixelSize, centerY + pixelSize, 0xFFFFFFFF);
+        
         super.render(context, mouseX, mouseY, delta);
     }
 
-    @id86240433 (@Override)
+    @Override
     public boolean shouldPauseGame() {
         return false;
     }
